@@ -6,7 +6,13 @@ for details on configuring this project to bundle and minify static web assets. 
   font-weight: bold;
   color: #333;
 }
-
+#connectionStatus {
+  line-height: 2em;
+}
+#connectionStatus span {
+  font-size: 2em;
+  vertical-align: sub;
+}
 #connectionStatus span {
   color: gray;
 }
