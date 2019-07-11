@@ -45,6 +45,7 @@ namespace ravendb_live_counter
           X509Certificate2Collection certCollection = certStore.Certificates.Find(
                                      X509FindType.FindByThumbprint,
                                  // I know this will be a single thumbprint, not *
+                                 // see: https://azure.microsoft.com/de-de/blog/using-certificates-in-azure-websites-applications/
                                  System.Environment.GetEnvironmentVariable("WEBSITES_LOAD_CERTIFICATES"),
                                      false);
 
@@ -55,7 +56,7 @@ namespace ravendb_live_counter
         {
           Urls = new[] { "https://a.free.kamranicus.ravendb.cloud" },
           Database = "livecounter",
-          Certificate =
+          Certificate = certificate
         };
 
         store.Initialize();
