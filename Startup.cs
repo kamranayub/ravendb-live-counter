@@ -46,10 +46,11 @@ namespace ravendb_live_counter
                                      X509FindType.FindByThumbprint,
                                  // I know this will be a single thumbprint, not *
                                  // see: https://azure.microsoft.com/de-de/blog/using-certificates-in-azure-websites-applications/
-                                 System.Environment.GetEnvironmentVariable("WEBSITES_LOAD_CERTIFICATES"),
+                                 System.Environment.GetEnvironmentVariable("WEBSITE_LOAD_CERTIFICATES"),
                                      false);
 
           certificate = certCollection[0];
+          certStore.Close();
         }
 
         var store = new DocumentStore()
