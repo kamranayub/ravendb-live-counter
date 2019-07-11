@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,11 +30,32 @@ namespace ravendb_live_counter
     {
       services.AddSingleton<IDocumentStore>(provider =>
       {
+        var isAzure = System.Environment.GetEnvironmentVariable("AZURE") != null;
+
+        X509Certificate2 certificate;
+
+        if (!isAzure)
+        {
+          certificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(System.Environment.GetEnvironmentVariable("RAVENDB_KAMRANICUS_CERT"));
+        }
+        else
+        {
+          X509Store certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+          certStore.Open(OpenFlags.ReadOnly);
+          X509Certificate2Collection certCollection = certStore.Certificates.Find(
+                                     X509FindType.FindByThumbprint,
+                                 // I know this will be a single thumbprint, not *
+                                 System.Environment.GetEnvironmentVariable("WEBSITES_LOAD_CERTIFICATES"),
+                                     false);
+
+          certificate = certCollection[0];
+        }
+
         var store = new DocumentStore()
         {
           Urls = new[] { "https://a.free.kamranicus.ravendb.cloud" },
           Database = "livecounter",
-          Certificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(System.Environment.GetEnvironmentVariable("RAVENDB_KAMRANICUS_CERT"))
+          Certificate =
         };
 
         store.Initialize();
